@@ -1,0 +1,56 @@
+<!doctype html>
+<!-- Showcase cover, 2400 x 1600: four teammates' lock screens on the same day. -->
+<html><head><meta charset="utf-8"><title>Relay cover</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 2400px; height: 1600px; overflow: hidden; background: #070b16; color: #fff; font-family: "Barlow"; }
+  .bg { position: absolute; inset: 0; background: url(art.jpg) center 34% / 2400px auto no-repeat; filter: blur(30px) brightness(.4) saturate(1.1); transform: scale(1.08); }
+  .bg2 { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,11,22,.92) 0, rgba(7,11,22,.7) 25%, rgba(7,11,22,.45) 60%, rgba(7,11,22,.9) 100%); }
+  .kick { position: absolute; left: 110px; top: 70px; font: 700 30px "Barlow Condensed"; letter-spacing: .18em; color: #ffe066; text-transform: uppercase; }
+  .url { position: absolute; right: 110px; top: 70px; font: 700 30px "Barlow Condensed"; letter-spacing: .1em; color: #94a3c4; text-transform: uppercase; }
+  .url b { color: #fff; }
+  h1 { position: absolute; left: 102px; top: 112px; font: 700 210px/.8 "Barlow Condensed"; letter-spacing: -.01em; text-transform: uppercase; }
+  .lede { position: absolute; left: 760px; top: 128px; width: 1530px; font: 500 44px/1.28 "Barlow"; color: #cdd6ea; }
+  .lede b { color: #fff; font-weight: 600; }
+  .facts { position: absolute; left: 760px; top: 262px; display: flex; gap: 40px; font: 500 29px "Barlow"; color: #c4cee3; }
+  .facts span b { font: 700 36px "Barlow Condensed"; color: #ffe066; margin-right: 8px; letter-spacing: .02em; }
+  .same { position: absolute; left: 254px; right: 254px; top: 352px; font: 700 28px "Barlow Condensed"; letter-spacing: .16em; color: #94a3c4; text-transform: uppercase; display: flex; justify-content: space-between; }
+  .same b { color: #fff; }
+  .phones { position: absolute; left: 254px; top: 404px; display: flex; gap: 40px; }
+  .ph { width: 443px; }
+  .phone { position: relative; width: 443px; height: 960px; border-radius: 60px; background: #10131b; padding: 13px; box-shadow: 0 50px 90px -40px rgba(0,0,0,.9), 0 0 0 2px #30384f inset; }
+  .scr { position: relative; width: 100%; height: 100%; border-radius: 48px; overflow: hidden; }
+  .scr svg { display: block; width: 100%; height: 100%; }
+  .isl { position: absolute; left: 35.3%; top: 1.3%; width: 29.3%; height: 4%; border-radius: 99px; background: #000; }
+  .d { position: absolute; top: 7%; width: 100%; text-align: center; font: 600 20px -apple-system, system-ui; }
+  .t { position: absolute; top: 9.1%; width: 100%; text-align: center; font: 700 100px/1 -apple-system, system-ui; letter-spacing: -.01em; }
+  .cap { margin-top: 24px; }
+  .cap .a { font: 700 26px "Barlow Condensed"; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+  .cap .b { font: 700 50px/1 "Barlow Condensed"; text-transform: uppercase; margin-top: 6px; }
+  .cap .c { font: 500 26px/1.3 "Barlow"; color: #b8c3da; margin-top: 8px; }
+</style>
+<script src="fonts.js"></script><script src="plan.js"></script><script src="relay.js"></script></head>
+<body>
+<div class="bg"></div><div class="bg2"></div>
+<div class="kick">Countdown lock screen · for team projects</div>
+<div class="url">Live: <b>arshdwani.github.io/relay-countdown</b></div>
+<h1>Relay.</h1>
+<p class="lede">One lap is the whole project. <b>Each teammate runs one leg</b> and gets their own lock screen, and the baton is in the same spot on all four.</p>
+<div class="facts"><span><b>20 m</b>a day: 20 days, one 400 m lap</span><span><b>30 m</b>takeover zones: a day early, half a day after</span><span><b>Gemini</b>plan and stadium painting</span></div>
+<div class="same"><span>Same day on four phones: <b>Fri, Nov 27</b> · handoff 2</span><span>Due <b>Mon, Dec 7, 11:59 PM</b></span></div>
+<div class="phones" id="phones"></div>
+<script>
+const st = document.createElement("style"); st.textContent = FONT_CSS; document.head.appendChild(st);
+const DATE = "2026-11-27";
+Promise.all(['700 30px "Barlow Condensed"', '600 30px "Barlow Condensed"', '500 30px "Barlow"', '600 30px "Barlow"'].map(f => document.fonts.load(f))).then(() => {
+  document.getElementById("phones").innerHTML = [1, 2, 3, 4].map(L => {
+    const s = Object.assign(relayState(DEFAULT_PLAN, DATE, L), { dueTime: DEFAULT_PLAN.dueTime });
+    const yc = youCard(s), l = DEFAULT_PLAN.legs[L - 1];
+    const sub = { 1: "Handed off Monday. Backing up the team.", 2: "Day 5 of 5. Hands off tomorrow morning.", 3: "Starts running today. Baton tomorrow.", 4: "Six days out. Knows exactly when." }[L];
+    return `<div class="ph"><div class="phone"><div class="scr">${renderRelay({ plan: DEFAULT_PLAN, date: DATE, leg: L, W: 1290, H: 2796, art: "art.jpg" })}
+      <div class="isl"></div><div class="d">Friday, November 27</div><div class="t">9:41</div></div></div>
+      <div class="cap"><div class="a" style="color:${RELAY_COLORS[L - 1]}">Leg ${L} · ${l.title.replace("Frontend & Integration", "Frontend")}</div><div class="b">${yc.big}</div><div class="c">${sub}</div></div></div>`;
+  }).join("");
+});
+</script>
+</body></html>

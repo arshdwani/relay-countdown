@@ -1,0 +1,29 @@
+<!doctype html>
+<!-- One lock screen for headless rendering: frame.html?date=YYYY-MM-DD&leg=1..4&w=1290&h=2796[&clock=1] -->
+<html><head><meta charset="utf-8"><title>Relay frame</title>
+<style>html,body{margin:0;background:#070b16;overflow:hidden}
+#ios{display:none;position:absolute;inset:0;font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;color:rgba(255,255,255,.95);text-align:center;transform-origin:0 0}
+.clock #ios{display:block}
+#ios .island{position:absolute;left:456px;top:33px;width:378px;height:111px;border-radius:56px;background:#000}
+#ios .date{position:absolute;top:200px;width:1290px;font-size:62px;font-weight:600}
+#ios .time{position:absolute;top:262px;width:1290px;font-size:318px;font-weight:700;line-height:1;letter-spacing:-.01em}
+#ios .btn{position:absolute;top:2530px;width:150px;height:150px;border-radius:50%;background:rgba(40,46,64,.55);display:grid;place-items:center}
+#ios .btn.l{left:138px}#ios .btn.r{left:1002px}
+#ios .home{position:absolute;left:435px;top:2755px;width:420px;height:15px;border-radius:8px;background:#fff}
+</style>
+<script src="fonts.js"></script><script src="plan.js"></script><script src="relay.js"></script></head>
+<body><div id="out"></div>
+<div id="ios"><div class="island"></div><div class="date" id="iosdate"></div><div class="time">9:41</div>
+<div class="btn l"><svg width="54" height="64" viewBox="0 0 24 28"><path d="M6 2h12v5l-3 5v14H9V12L6 7z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg></div>
+<div class="btn r"><svg width="66" height="54" viewBox="0 0 30 24"><path d="M3 6h6l2-3h8l2 3h6v15H3z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><circle cx="15" cy="13" r="4.5" fill="none" stroke="#fff" stroke-width="2"/></svg></div>
+<div class="home"></div></div>
+<script>
+const q = new URLSearchParams(location.search);
+const W = +(q.get("w") || 1290), H = +(q.get("h") || 2796), date = q.get("date") || new Date().toISOString().slice(0, 10);
+const st = document.createElement("style"); st.textContent = FONT_CSS; document.head.appendChild(st);
+document.fonts.load('700 30px "Barlow Condensed"').then(() => Promise.all([document.fonts.load('600 30px "Barlow Condensed"'), document.fonts.load('500 30px "Barlow"'), document.fonts.load('600 30px "Barlow"')])).then(() => {
+  document.getElementById("out").innerHTML = renderRelay({ plan: DEFAULT_PLAN, date, leg: +(q.get("leg") || 3), W, H, art: "art.jpg" });
+  if (q.get("clock")) { document.body.classList.add("clock"); document.getElementById("ios").style.transform = `scale(${W / 1290})`;
+    document.getElementById("iosdate").textContent = new Date(date + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
+});
+</script></body></html>
